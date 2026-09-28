@@ -31,3 +31,16 @@ body:before,body:after{content:"";position:fixed;z-index:-1;pointer-events:none;
 .primary:before,.glass-button:before,.soft-button:before,.login:before{display:none}.primary:hover,.glass-button:hover,.soft-button:hover,.login:hover{transform:translateY(-1px);transition-duration:.18s}.primary:active,.glass-button:active,.soft-button:active,.login:active{transform:translateY(0) scale(.985)!important}.card-menu:hover{transform:scale(1.04);transition-duration:.18s}.list-button.is-saved{background:#1f6c4a!important;border-color:#76d7a34d!important;color:#e1ffed!important;box-shadow:0 0 0 1px #7ee0aa1f}.list-button.is-saved svg{color:#9ff5c0}.list-button.is-saved:hover{background:#278157!important}
 /* Gallery-like teaser change: outgoing photo dissolves beneath the next one */
 @keyframes galleryIncoming{from{opacity:0;transform:scale(1.055)}to{opacity:.98;transform:scale(1.025)}}@keyframes galleryOutgoing{from{opacity:.98;transform:scale(1.025)}to{opacity:0;transform:scale(1.045)}}@keyframes galleryCopy{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.hero-backdrop.hero-backdrop-outgoing{z-index:0;animation:galleryOutgoing .76s cubic-bezier(.22,.61,.36,1) both;filter:saturate(1.35) contrast(1.06) brightness(1.1)}.hero-backdrop.hero-slide-next,.hero-backdrop.hero-slide-prev{z-index:1;animation:galleryIncoming .76s cubic-bezier(.22,.61,.36,1) both,heroBreath 13s .76s ease-in-out infinite alternate}.hero-copy.hero-slide-next,.hero-copy.hero-slide-prev{animation:galleryCopy .52s .08s cubic-bezier(.22,.61,.36,1) both}@media(prefers-reduced-motion:reduce){.hero-backdrop.hero-backdrop-outgoing,.hero-backdrop.hero-slide-next,.hero-backdrop.hero-slide-prev,.hero-copy.hero-slide-next,.hero-copy.hero-slide-prev{animation:none!important}}
+/* Карточки «Знакомая история»: жест как в приложениях знакомств */
+.deck-area{position:relative}
+.swipe-card{cursor:grab;user-select:none;will-change:transform;transition:transform .34s cubic-bezier(.22,.9,.26,1),box-shadow .34s ease;isolation:isolate}
+.swipe-card:active,.swipe-card.is-dragging{cursor:grabbing;transition:none}
+.swipe-card.is-dragging{box-shadow:10px 12px 0 #3d275055,22px 24px 0 #321d3f44,0 34px 75px #0009}
+.swipe-card.leaving-right{pointer-events:none;animation:deck-dismiss-right .3s cubic-bezier(.2,.85,.25,1) forwards}
+.swipe-card.leaving-left{pointer-events:none;animation:deck-dismiss-left .3s cubic-bezier(.2,.85,.25,1) forwards}
+.swipe-choice{position:absolute;z-index:2;top:26px;border:3px solid;padding:6px 10px;border-radius:8px;font-size:17px;font-weight:800;letter-spacing:1.5px;pointer-events:none;transform:rotate(-12deg);text-shadow:0 1px 9px #0007}
+.swipe-choice-nope{left:23px;color:#ff7890;border-color:#ff7890;background:#250e18aa}
+.swipe-choice-watched{right:23px;color:#86f0b5;border-color:#86f0b5;background:#0c251aaa;transform:rotate(12deg)}
+@keyframes deck-dismiss-right{to{transform:translateX(125%) rotate(19deg);opacity:0}}
+@keyframes deck-dismiss-left{to{transform:translateX(-125%) rotate(-19deg);opacity:0}}
+@media(prefers-reduced-motion:reduce){.swipe-card,.swipe-card.leaving-right,.swipe-card.leaving-left{transition:none;animation:none}}
