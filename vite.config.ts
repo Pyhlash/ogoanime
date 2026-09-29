@@ -52,6 +52,10 @@ export default defineConfig(async () => {
 
   return {
     server: {
+      host: "0.0.0.0",
+      // Temporary public previews use a random Tunnelmole subdomain.
+      // Keep this limited to that provider rather than allowing every Host header.
+      allowedHosts: [".tunnelmole.net"],
       ...(managedLinux ? { host: "0.0.0.0", allowedHosts: ["terminal.local"] } : {}),
       ...(isCodexSeatbeltSandbox ? { watch: { useFsEvents: false, usePolling: true } } : {}),
     },
