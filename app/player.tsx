@@ -5,11 +5,11 @@ import {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} from '@/compo
 import type {Anime,Episode,Entry} from '@/lib/anime';
 type Prompt='opening'|'ending'|'next'|null;
 const read=(key:string,fallback:string)=>typeof window==='undefined'?fallback:localStorage.getItem(key)||fallback;
-export default function Player({anime,entry,startEpisode,onProgress}:{anime:Anime;entry?:Entry;startEpisode?:number;onProgress:(episode:number,position:number,ended:boolean)=>void}){
+export default function Player({anime,entry,startEpisode,initialPosition,onProgress}:{anime:Anime;entry?:Entry;startEpisode?:number;initialPosition?:number;onProgress:(episode:number,position:number,ended:boolean)=>void}){
  const video=useRef<HTMLVideoElement>(null),frame=useRef<HTMLDivElement>(null),callback=useRef(onProgress),lastSaved=useRef(0),handled=useRef<string>(''),shouldPlay=useRef(false);callback.current=onProgress;
  const episodes=(anime.episodes||[]).filter(e=>e.hls_1080||e.hls_720||e.hls_480).sort((a,b)=>a.ordinal-b.ordinal);
  const [ordinal,setOrdinal]=useState(startEpisode||entry?.episode||episodes[0]?.ordinal||1),[quality,setQuality]=useState(()=>read('ogoanime:quality','720')),[autoNext,setAutoNext]=useState(()=>read('ogoanime:auto-next','false')==='true'),[skipOpening,setSkipOpening]=useState(()=>read('ogoanime:skip-opening','false')==='true'),[skipEnding,setSkipEnding]=useState(()=>read('ogoanime:skip-ending','false')==='true'),[prompt,setPrompt]=useState<Prompt>(null),[fullscreen,setFullscreen]=useState(false),[error,setError]=useState(''),[retry,setRetry]=useState(0);
- const episode=episodes.find(e=>e.ordinal===ordinal)||episodes[0];const nextEpisode=episodes.find(e=>e.ordinal===episode?.ordinal+1);const dubbedEpisodes=episodes.length||anime.episodes_total||0;const resume=useRef({episode:entry?.episode,position:entry?.position||0});
+ const episode=episodes.find(e=>e.ordinal===ordinal)||episodes[0];const nextEpisode=episodes.find(e=>e.ordinal===episode?.ordinal+1);const dubbedEpisodes=episodes.length||anime.episodes_total||0;const resume=useRef({episode:startEpisode||entry?.episode,position:initialPosition??entry?.position??0});
  const moveNext=()=>{if(nextEpisode){shouldPlay.current=true;resume.current={episode:nextEpisode.ordinal,position:0};setPrompt(null);setOrdinal(nextEpisode.ordinal)}};
  const setPreference=(key:string,value:boolean,setter:(value:boolean)=>void)=>{setter(value);localStorage.setItem(key,String(value))};
  const toggleFullscreen=()=>{const node=frame.current;if(!node)return;if(document.fullscreenElement)document.exitFullscreen();else node.requestFullscreen?.().catch(()=>{})};
