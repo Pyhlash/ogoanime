@@ -3,6 +3,7 @@ create table if not exists public.library (
  anime_id bigint not null,
  status text check (status in ('watching','watched','planned')),
  favorite boolean not null default false,
+ following boolean not null default false,
  episode integer not null default 0 check (episode >= 0),
  position double precision not null default 0 check (position >= 0),
  anime jsonb not null,
