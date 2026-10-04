@@ -1,0 +1,36 @@
+/* Keep mounted content stable while carousel and library state update. */
+main,main>section,.poster-grid .anime-card,.home-row .anime-card,
+.continue-grid .continue-card,.carousel-nav,.notice,
+.auth-modal,.anime-modal,.heart-button.active,.hero .primary {
+  animation:none!important;
+}
+.card-art {will-change:auto}
+.card-art::after,.primary::before,.glass-button::before,.soft-button::before,.login::before {display:none}
+.home-row .anime-card:hover,.continue-card:hover,.card-menu:hover {transform:none}
+.hero-copy {align-items:flex-start}
+.hero-copy>* {flex-shrink:0}
+.hero-copy>.pill {width:fit-content;max-width:100%}
+.hero-backdrop.hero-slide-next,.hero-backdrop.hero-slide-prev {animation:none!important;transform:none}
+.hero-backdrop-outgoing {display:none}
+.hero-copy.hero-slide-next,.hero-copy.hero-slide-prev {animation:none!important}
+.auth-modal,.bug-report-modal,.anime-modal {max-height:calc(100dvh - 40px);overflow-y:auto;overscroll-behavior:contain}
+@media(min-width:761px) {
+  .hero {height:auto;min-height:460px;max-height:none}
+  .hero-copy {position:relative;min-height:460px;height:auto;padding:36px 42px;width:100%;justify-content:center}
+  .hero h2 {font-size:clamp(30px,3.3vw,48px);line-height:1.15;max-width:760px;margin:18px 0 16px;min-height:0;height:auto;overflow-wrap:anywhere}
+  .hero-copy>p {max-width:620px;margin-top:16px}
+  .hero-actions {flex-wrap:wrap;margin-top:20px}
+  .hero-source {margin-top:14px}
+  .hero-meta {flex-wrap:wrap}
+  .topbar {gap:16px}
+  .topbar nav {gap:clamp(12px,2vw,28px)}
+  .topbar nav button {font-size:13px}
+  .header-right {gap:8px}
+}
+@media(min-width:761px) and (max-width:1050px) {
+  .topbar {padding-inline:20px}
+  .topbar .brand {font-size:21px}
+  .topbar nav {gap:12px}
+  .header-right>.icon-button {display:none}
+  .login {padding:10px 12px}
+}
