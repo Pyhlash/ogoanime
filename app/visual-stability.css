@@ -1,4 +1,7 @@
 /* Keep mounted content stable while carousel and library state update. */
+.player-shortcuts {margin-top:16px;color:#bcb0cc;font-size:13px;max-width:760px}
+.player-shortcuts summary {cursor:pointer;min-height:32px;width:fit-content}
+.player-shortcuts p {line-height:1.8;padding:8px 0}
 main,main>section,.poster-grid .anime-card,.home-row .anime-card,
 .continue-grid .continue-card,.carousel-nav,.notice,
 .auth-modal,.anime-modal,.heart-button.active,.hero .primary {

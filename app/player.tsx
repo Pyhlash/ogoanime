@@ -25,6 +25,27 @@ export default function Player({anime,entry,startEpisode,initialPosition,onProgr
  el.addEventListener('playing',playing);el.addEventListener('timeupdate',tick);el.addEventListener('pause',pause);el.addEventListener('seeked',pause);el.addEventListener('ended',end);el.addEventListener('volumechange',volume);window.addEventListener('pagehide',pause);
  return()=>{save();hls?.destroy();el.removeEventListener('loadedmetadata',loaded);el.removeEventListener('playing',playing);el.removeEventListener('timeupdate',tick);el.removeEventListener('pause',pause);el.removeEventListener('seeked',pause);el.removeEventListener('ended',end);el.removeEventListener('volumechange',volume);window.removeEventListener('pagehide',pause)};
  },[episode?.id,quality,retry]);
+ useEffect(()=>{
+  const keydown=(event:KeyboardEvent)=>{
+   const el=video.current,target=event.target;
+   if(!el||event.defaultPrevented||event.isComposing||event.ctrlKey||event.metaKey||event.altKey)return;
+   if(document.querySelector('[role="dialog"], [role="alertdialog"], [role="listbox"], [role="menu"]'))return;
+   if(target instanceof HTMLElement&&(target.isContentEditable||target.closest('input,textarea,select,button,a,summary,[role="combobox"],[role="slider"],[role="textbox"]')))return;
+   const code=event.code;
+   if(!['Space','KeyK','KeyF','KeyM','ArrowLeft','ArrowRight','ArrowUp','ArrowDown','KeyJ','KeyL'].includes(code))return;
+   event.preventDefault();
+   // Suppress the native video shortcut so each key applies exactly once.
+   event.stopPropagation();
+   if(['Space','KeyK','KeyF','KeyM'].includes(code)&&event.repeat)return;
+   if(code==='Space'||code==='KeyK'){if(el.paused)el.play().catch(()=>{});else el.pause()}
+   else if(code==='KeyF')toggleFullscreen();
+   else if(code==='KeyM')el.muted=!el.muted;
+   else if(code==='ArrowUp'||code==='ArrowDown'){el.volume=Math.max(0,Math.min(1,el.volume+(code==='ArrowUp'?.05:-.05)));if(el.volume>0)el.muted=false}
+   else if(Number.isFinite(el.duration)&&el.duration>0){const backwards=code==='ArrowLeft'||code==='KeyJ';const seconds=code==='KeyJ'||code==='KeyL'||event.shiftKey?10:5;el.currentTime=Math.max(0,Math.min(el.duration,el.currentTime+(backwards?-seconds:seconds)))}
+  };
+  window.addEventListener('keydown',keydown,true);
+  return()=>window.removeEventListener('keydown',keydown,true);
+ },[]);
  if(anime.is_blocked_by_geo||anime.is_blocked_by_copyrights)return <div className="empty">Источник ограничил доступ к этому аниме. Воспроизведение недоступно.</div>;
  if(!episode)return <div className="empty">Серии пока не доступны у источника. Добавьте аниме в «Хочу посмотреть».</div>;
  const skip=()=>{const range=prompt==='opening'?episode.opening:episode.ending;const stop=range?.stop??(prompt==='ending'?video.current?.duration:undefined);if(stop&&Number.isFinite(stop)&&video.current){video.current.currentTime=stop;handled.current=prompt||'';setPrompt(null)}};
@@ -32,5 +53,6 @@ export default function Player({anime,entry,startEpisode,initialPosition,onProgr
  {error&&<div role="alert" className="notice">{error}<button onClick={()=>setRetry(retry+1)}>Повторить</button></div>}
  <div className="player-controls"><span>Серия {episode.ordinal}</span><span className="dubbing-info">AniLiberty <small>· {dubbedEpisodes} серий</small></span><Select value={quality} onValueChange={v=>{if(v){shouldPlay.current=!!video.current&&!video.current.paused;resume.current={episode:episode.ordinal,position:video.current?.currentTime||0};localStorage.setItem('ogoanime:quality',v);setQuality(v)}}}><SelectTrigger aria-label="Качество видео" className="w-28"><SelectValue/></SelectTrigger><SelectContent>{['1080','720','480'].filter(q=>episode[('hls_'+q) as keyof Episode]).map(q=><SelectItem key={q} value={q}>{q}p</SelectItem>)}</SelectContent></Select><button className="soft-button" onClick={toggleFullscreen}>{fullscreen?'Свернуть':'Во весь экран'}</button>{nextEpisode&&<button className="soft-button" onClick={moveNext}>Следующая серия</button>}</div>
  <div className="player-settings"><label><input type="checkbox" checked={autoNext} onChange={e=>setPreference('ogoanime:auto-next',e.target.checked,setAutoNext)}/> Автопереход к следующей серии</label><label><input type="checkbox" checked={skipOpening} onChange={e=>setPreference('ogoanime:skip-opening',e.target.checked,setSkipOpening)}/> Пропускать заставки</label><label><input type="checkbox" checked={skipEnding} onChange={e=>setPreference('ogoanime:skip-ending',e.target.checked,setSkipEnding)}/> Пропускать титры</label></div>
+ <details className="player-shortcuts"><summary>Горячие клавиши</summary><p>Пробел / K — пауза · ← / → — ±5 секунд · Shift + ← / → или J / L — ±10 секунд · ↑ / ↓ — громкость · M — без звука · F — полный экран · Esc — выйти из полного экрана. Работают и в русской раскладке.</p></details>
  <div className="episodes">{episodes.map(e=><button key={e.id} className={e.id===episode.id?'selected':''} onClick={()=>{resume.current={episode:e.ordinal,position:0};setOrdinal(e.ordinal)}}>{e.ordinal}</button>)}</div></div>
 }
