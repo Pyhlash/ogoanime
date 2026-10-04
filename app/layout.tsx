@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import "./bug-reporter.css";
+import BugReporter from "./bug-reporter";
 
 export const metadata: Metadata = {
   title: "ogoanime — твоё место в мире аниме",
@@ -20,7 +22,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru" className="dark">
-      <body className="antialiased">{children}</body>
+      <body className="antialiased"><BugReporter />{children}</body>
     </html>
   );
 }
