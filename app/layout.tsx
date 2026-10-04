@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import "./bug-reporter.css";
+import "./mobile.css";
 import BugReporter from "./bug-reporter";
 
 export const metadata: Metadata = {

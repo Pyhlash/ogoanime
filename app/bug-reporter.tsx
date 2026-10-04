@@ -4,7 +4,7 @@ import {Bug,LoaderCircle,Send} from 'lucide-react';
 import {Dialog,DialogContent,DialogDescription,DialogTitle} from '@/components/ui/dialog';
 
 type Report={kind:'manual'|'automatic';message:string;stack?:string;page:string;userAgent:string;contact?:string};
-async function sendReport(report:Report){const response=await fetch('/api/bug-report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});const data=await response.json().catch(()=>({}));if(!response.ok)throw Error(data.error||'Не удалось отправить сообщение')}
+async function sendReport(report:Report){const response=await fetch('/api/bug-report',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(report)});const data=await response.json().catch(()=>({})) as {error?:string};if(!response.ok)throw Error(data.error||'Не удалось отправить сообщение')}
 
 export default function BugReporter(){
  const [open,setOpen]=useState(false),[busy,setBusy]=useState(false),[message,setMessage]=useState(''),[contact,setContact]=useState(''),[status,setStatus]=useState('');
