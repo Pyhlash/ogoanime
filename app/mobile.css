@@ -55,3 +55,9 @@
   footer {padding:24px 16px calc(150px + env(safe-area-inset-bottom));overflow-wrap:anywhere}
   .bug-report-button {min-width:44px;min-height:44px;bottom:calc(76px + env(safe-area-inset-bottom));backdrop-filter:none}
 }
+.carousel-nav .hero-carousel-controls {gap:2px;padding:0 4px;box-shadow:none}
+.carousel-nav .hero-carousel-controls>div {gap:0}
+.carousel-nav .hero-carousel-controls>div button,
+.carousel-nav .hero-carousel-controls>div button.active {position:relative;width:22px;min-width:22px;height:44px;min-height:44px;background:transparent;box-shadow:none;padding:0;transform:none}
+.carousel-nav .hero-carousel-controls>div button::after {content:"";position:absolute;left:8px;top:19px;width:6px;height:6px;border-radius:50%;background:#ffffff55}
+.carousel-nav .hero-carousel-controls>div button.active::after {background:#d2adff}
